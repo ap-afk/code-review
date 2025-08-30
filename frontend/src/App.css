@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+main {
+  display: flex;
+  width: 100vw;
+  height: 100vh; /* full viewport height */
+  gap: 1rem;
+}
+
+main .left,
+main .right {
+  flex: 1; /* equal width */
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* inner content scrolls separately */
+}
+
+/* Left panel */
+main .left {
+  background-color: #000;
+  position: relative;
+}
+
+.left .code,
+.left .code pre,
+.left .code code {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 0.7rem;
+  background-color: #1a1919;
+
+}
+
+.left .review {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: lightblue;
+  color: black;
+  padding: 0.5rem 2rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0.7rem;
+}
+
+/* Right panel */
+main .right {
+  background-color: #666363;
+  color: #fff;
+  padding: 1rem;
+  overflow: auto; /* scroll if content is too long */
+  white-space: pre-wrap; /* preserve line breaks */
+  word-wrap: break-word;
+}
