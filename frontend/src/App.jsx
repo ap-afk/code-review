@@ -15,7 +15,7 @@ function App() {
   }`);
 const [review, setReview] = useState("");
   async function ReviewCode(){
-  const response = await axios.post("http://localhost:3000/ai/get-review", { code })
+  const response = await axios.post("code-reviewer-orpin-six.vercel.app", { code })
   
   setReview(response.data);
   }
