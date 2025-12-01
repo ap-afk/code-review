@@ -20,7 +20,7 @@ function App() {
   async function ReviewCode() {
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/ai/get-review", { code });
+      const response = await axios.post("https://code-review-gnh1.onrender.com/ai/get-review", { code });
       setReview(response.data);
     } catch (err) {
       setReview("❌ Error reviewing code. Check server console.");
@@ -35,7 +35,7 @@ function App() {
         <h2>🧑‍💻 Code Editor</h2>
         <Editor
           value={code}
-          onValueChange={(v) => setCode(v)}
+          onValueChange={setCode}
           highlight={(v) => prism.highlight(v, prism.languages.js, "js")}
           padding={12}
           style={{
@@ -43,7 +43,7 @@ function App() {
             fontSize: 15,
             borderRadius: "8px",
             background: "#1e1e1e",
-            color: "#ffffff",
+            color: "#fff",
             minHeight: "300px",
           }}
         />
@@ -56,7 +56,11 @@ function App() {
       <section className="right-pane">
         <h2>🔍 AI Review</h2>
         <div className="review-box">
-          {review ? <Markdown>{review}</Markdown> : <p className="placeholder">AI review will appear here...</p>}
+          {review ? (
+            <Markdown>{review}</Markdown>
+          ) : (
+            <p className="placeholder">AI review will appear here...</p>
+          )}
         </div>
       </section>
     </main>
