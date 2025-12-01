@@ -1,52 +1,66 @@
-import React, { useEffect, useState } from 'react'
-import './App.css'
+import React, { useEffect, useState } from "react";
+import "./App.css";
 import "prismjs/themes/prism-tomorrow.css";
 import Editor from "react-simple-code-editor";
-import prism from "prismjs"; 
-import Markdown from 'react-markdown'  
-import axios from 'axios';
+import prism from "prismjs";
+import Markdown from "react-markdown";
+import axios from "axios";
+
 function App() {
+  const [code, setCode] = useState(`function sum () {
+  return 1 + 2;
+}`);
+  const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     prism.highlightAll();
-  });
+  }, []);
 
-  const [code, setCode] = useState(`function sum (){
-    return 1 + 2;
-  }`);
-const [review, setReview] = useState("");
-  async function ReviewCode(){
-  const response = await axios.post("code-reviewer-orpin-six.vercel.app", { code })
-  
-  setReview(response.data);
+  async function ReviewCode() {
+    try {
+      setLoading(true);
+      const response = await axios.post("http://localhost:3000/ai/get-review", { code });
+      setReview(response.data);
+    } catch (err) {
+      setReview("❌ Error reviewing code. Check server console.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <>
-    <main>
-      <div className="left">
-    <div className="code">
-      <Editor
-        value={code}
-        onValueChange={code => setCode(code)}
-        highlight={code => prism.highlight(code, prism.languages.js, 'js')}
-        padding={10}
-        style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
-          fontSize: 16,
-          border: '1px solid black',
-          borderRadius: '0.7rem',
-          overflow: 'auto',
-        }}
-      />
-    </div>
-      <div className="review" onClick={ReviewCode}>Review</div>
-      </div>
-      <div className="right">
-        <Markdown>{review}</Markdown>
-      </div>
+    <main className="container">
+      <section className="left-pane">
+        <h2>🧑‍💻 Code Editor</h2>
+        <Editor
+          value={code}
+          onValueChange={(v) => setCode(v)}
+          highlight={(v) => prism.highlight(v, prism.languages.js, "js")}
+          padding={12}
+          style={{
+            fontFamily: '"Fira Code", monospace',
+            fontSize: 15,
+            borderRadius: "8px",
+            background: "#1e1e1e",
+            color: "#ffffff",
+            minHeight: "300px",
+          }}
+        />
+
+        <button className="review-btn" onClick={ReviewCode} disabled={loading}>
+          {loading ? "Analyzing..." : "Review Code"}
+        </button>
+      </section>
+
+      <section className="right-pane">
+        <h2>🔍 AI Review</h2>
+        <div className="review-box">
+          {review ? <Markdown>{review}</Markdown> : <p className="placeholder">AI review will appear here...</p>}
+        </div>
+      </section>
     </main>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
